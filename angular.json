@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "shopping-cart",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "shopping-cart": {
+      "projectType": "application",
+      "root": "apps/shopping-cart",
+      "sourceRoot": "apps/shopping-cart/src",
+      "prefix": "shopping-ui",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/shopping-cart",
+            "index": "apps/shopping-cart/src/index.html",
+            "main": "apps/shopping-cart/src/main.ts",
+            "polyfills": "apps/shopping-cart/src/polyfills.ts",
+            "tsConfig": "apps/shopping-cart/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/shopping-cart/src/favicon.ico",
+              "apps/shopping-cart/src/assets"
+            ],
+            "styles": ["apps/shopping-cart/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/shopping-cart/src/environments/environment.ts",
+                  "with": "apps/shopping-cart/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "shopping-cart:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "shopping-cart:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "shopping-cart:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/shopping-cart/src/**/*.ts",
+              "apps/shopping-cart/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/shopping-cart"],
+          "options": {
+            "jestConfig": "apps/shopping-cart/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shopping-cart-e2e": {
+      "root": "apps/shopping-cart-e2e",
+      "sourceRoot": "apps/shopping-cart-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/shopping-cart-e2e/cypress.json",
+            "tsConfig": "apps/shopping-cart-e2e/tsconfig.e2e.json",
+            "devServerTarget": "shopping-cart:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "shopping-cart:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/shopping-cart-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
